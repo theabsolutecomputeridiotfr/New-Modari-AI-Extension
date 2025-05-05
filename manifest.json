@@ -11,7 +11,10 @@
     "identity"
   ],
   "host_permissions": [
-    "*://*/*",
+    "https://www.youtube.com/*",
+    "https://www.tiktok.com/*",
+    "https://www.instagram.com/*",
+    "https://www.reddit.com/*",
     "https://www.googleapis.com/",
     "https://www.google-analytics.com/"
   ],
