@@ -1,5 +1,37 @@
 document.addEventListener('DOMContentLoaded', initPopup);
 
+// 🧠 GA4 Setup — Replace with your real IDs
+const GA_MEASUREMENT_ID = "G-WBH5K3Y4Z6";
+const API_SECRET = "WM7tpPZiRB6l8KI2";
+
+function trackEvent(eventName, params = {}) {
+  chrome.storage.sync.get('ga_client_id', (data) => {
+    let clientId = data.ga_client_id;
+
+    if (!clientId) {
+      clientId = crypto.randomUUID();
+      chrome.storage.sync.set({ ga_client_id: clientId });
+    }
+
+    fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=${API_SECRET}`, {
+      method: "POST",
+      body: JSON.stringify({
+        client_id: clientId,
+        events: [
+          {
+            name: eventName,
+            params: params
+          }
+        ]
+      })
+    }).then(() => {
+      console.log(`📊 Tracked event: ${eventName}`);
+    }).catch(err => {
+      console.error("❌ GA tracking failed", err);
+    });
+  });
+}
+
 function initPopup() {
   const loginBtn = document.getElementById('login-btn');
   const logoutBtn = document.getElementById('logout-btn');
@@ -12,17 +44,18 @@ function initPopup() {
   const proStatus = document.getElementById('pro-status');
   const coinSpeedLabel = document.getElementById('coinSpeedLabel');
 
-  // Event listeners
+  // Event Listeners
   loginBtn.addEventListener('click', handleLogin);
   logoutBtn.addEventListener('click', handleLogout);
   toggleSwitch.addEventListener('change', handleToggle);
   addBlacklistBtn.addEventListener('click', addToBlacklist);
   upgradeBtn.addEventListener('click', () => {
+    trackEvent("upgrade_clicked", { source: "popup_ui" });
     window.open("https://modari-ai.com/products/modari-pro", "_blank");
   });
 
-  // Auth check
   checkAuthState();
+  loadBlacklist();
 
   function checkAuthState() {
     chrome.identity.getAuthToken({ interactive: false }, (token) => {
@@ -35,7 +68,6 @@ function initPopup() {
         loadToggleState();
         loadCoinCount();
         loadProStatus();
-        loadBlacklist(); // ✅ moved here
       }
     });
   }
@@ -46,12 +78,24 @@ function initPopup() {
         console.error("Login failed:", chrome.runtime.lastError?.message);
         return;
       }
+
+      // ✅ After login, track "account_created" only once
+      chrome.identity.getProfileUserInfo((info) => {
+        const email = info.email;
+        document.getElementById('user-email').textContent = email || "Logged in";
+
+        chrome.storage.sync.get('accountTracked', (res) => {
+          if (!res.accountTracked) {
+            trackEvent("account_created", { email });
+            chrome.storage.sync.set({ accountTracked: true });
+          }
+        });
+      });
+
       showControls();
-      loadUserInfo();
       loadToggleState();
       loadCoinCount();
       loadProStatus();
-      loadBlacklist(); // ✅ moved here
     });
   }
 
@@ -107,7 +151,6 @@ function initPopup() {
     chrome.storage.sync.get(['isPro'], (data) => {
       const isPro = data.isPro || false;
       proStatus.textContent = isPro ? "💎 Pro User" : "🆓 Free Version";
-
       if (coinSpeedLabel) {
         coinSpeedLabel.textContent = isPro ? "(+5/min)" : "(+2/min)";
       }
@@ -132,6 +175,7 @@ function initPopup() {
         chrome.storage.sync.set({ modariBlacklist: list }, () => {
           blacklistInput.value = '';
           loadBlacklist();
+          trackEvent("site_blocked", { site });
         });
       }
     });
@@ -141,9 +185,26 @@ function initPopup() {
     chrome.storage.sync.get(['modariBlacklist'], (data) => {
       const list = data.modariBlacklist || [];
       blacklistList.innerHTML = '';
-      list.forEach((site) => {
+      list.forEach((site, index) => {
         const li = document.createElement('li');
         li.textContent = site;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = '✕';
+        removeBtn.style.marginLeft = '8px';
+        removeBtn.style.fontSize = '12px';
+        removeBtn.style.color = '#f44336';
+        removeBtn.style.border = 'none';
+        removeBtn.style.background = 'transparent';
+        removeBtn.style.cursor = 'pointer';
+
+        removeBtn.addEventListener('click', () => {
+          list.splice(index, 1);
+          chrome.storage.sync.set({ modariBlacklist: list }, loadBlacklist);
+          trackEvent("site_unblocked", { site });
+        });
+
+        li.appendChild(removeBtn);
         blacklistList.appendChild(li);
       });
     });

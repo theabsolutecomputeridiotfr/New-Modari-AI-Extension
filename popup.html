@@ -14,16 +14,21 @@
 
   <!-- MAIN CONTROLS SECTION -->
   <div id="controls" class="hidden">
-    <!-- Toggle Switch -->
-    <label class="switch">
-      <input type="checkbox" id="toggle-switch">
-      <span class="slider"></span>
-    </label>
-    <span id="status-text">Enabled</span>
 
-    <!-- User Info -->
-    <div id="user-email" style="margin-bottom: 10px;"></div>
-    <button id="logout-btn">Logout</button>
+    <!-- TOP BAR: Toggle + User Info -->
+    <div id="top-bar">
+      <div class="left-side">
+        <label class="switch">
+          <input type="checkbox" id="toggle-switch">
+          <span class="slider"></span>
+        </label>
+        <span id="status-text">Enabled</span>
+      </div>
+      <div class="right-side">
+        <div id="user-email">Logged in</div>
+        <button id="logout-btn">Logout</button>
+      </div>
+    </div>
 
     <!-- Coin Display -->
     <div id="coinDisplay" style="margin-top: 10px;">
@@ -49,7 +54,7 @@
     </div>
   </div>
 
-  <!-- 👇 Script loaded last so all DOM elements are available -->
+  <!-- Script -->
   <script src="popup.js"></script>
 </body>
 </html>
