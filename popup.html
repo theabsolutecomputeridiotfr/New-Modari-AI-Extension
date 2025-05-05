@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- LOGIN SECTION -->
+  <div id="login-section">
+    <button id="login-btn">Login with Google</button>
+  </div>
+
+  <!-- MAIN CONTROLS SECTION -->
+  <div id="controls" class="hidden">
+    <label class="switch">
+      <input type="checkbox" id="toggle-switch">
+      <span class="slider"></span>
+    </label>
+    <span id="status-text">Enabled</span>
+    <div id="user-email" style="margin-bottom: 10px;"></div>
+    <button id="logout-btn">Logout</button>
+
+    <!-- COIN DISPLAY -->
+    <div id="coinDisplay" style="margin-top: 10px;">
+      🪙 Modari Coins: <span id="coinCount">0</span>
+      <span id="coinSpeedLabel"></span>
+    </div>
+
+    <!-- BLACKLIST -->
+    <hr>
+    <div id="blacklist-section" style="margin-top: 10px;">
+      <h4>Custom Blacklist</h4>
+      <input type="text" id="blacklist-input" placeholder="e.g. youtube.com" />
+      <button id="add-blacklist-btn">Add</button>
+      <ul id="blacklist-list" style="margin-top: 5px;"></ul>
+      <div style="font-size: 12px; color: gray;">Free users can block 2 sites. Pro users can block unlimited.</div>
+    </div>
+
+    <!-- PRO UPGRADE -->
+    <hr>
+    <div id="pro-section" style="margin-top: 10px;">
+      <span id="pro-status">🆓 Free Version</span><br>
+      <button id="upgrade-btn">Upgrade to Pro</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
