@@ -6,29 +6,14 @@
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
-
-  <!-- LOGIN SECTION -->
-  <div id="login-section">
-    <button id="login-btn">Login with Google</button>
-  </div>
-
   <!-- MAIN CONTROLS SECTION -->
-  <div id="controls" class="hidden">
-
-    <!-- TOP BAR: Toggle + User Info -->
-    <div id="top-bar">
-      <div class="left-side">
-        <label class="switch">
-          <input type="checkbox" id="toggle-switch">
-          <span class="slider"></span>
-        </label>
-        <span id="status-text">Enabled</span>
-      </div>
-      <div class="right-side">
-        <div id="user-email">Logged in</div>
-        <button id="logout-btn">Logout</button>
-      </div>
-    </div>
+  <div id="controls">
+    <!-- Toggle Switch -->
+    <label class="switch">
+      <input type="checkbox" id="toggle-switch">
+      <span class="slider"></span>
+    </label>
+    <span id="status-text">Enabled</span>
 
     <!-- Coin Display -->
     <div id="coinDisplay" style="margin-top: 10px;">
@@ -43,7 +28,7 @@
       <input type="text" id="blacklist-input" placeholder="e.g. youtube.com" />
       <button id="add-blacklist-btn">Add</button>
       <ul id="blacklist-list" style="margin-top: 5px;"></ul>
-      <div style="font-size: 12px; color: gray;">Free users can block 2 sites. Pro users can block unlimited.</div>
+      <div style="font-size: 12px; color: gray;">Free users can block 2 sites. Upgrade to Pro to block more.</div>
     </div>
 
     <!-- Upgrade to Pro -->
@@ -54,7 +39,6 @@
     </div>
   </div>
 
-  <!-- Script -->
   <script src="popup.js"></script>
 </body>
 </html>
